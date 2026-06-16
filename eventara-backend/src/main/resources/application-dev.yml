@@ -1,8 +1,8 @@
-# ── Development profile ───────────────────────────────────────────────────────
+﻿# ── Development profile ───────────────────────────────────────────────────────
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:eventseat_db}
-    username: ${DB_USERNAME:eventseat_user}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:eventara_db}
+    username: ${DB_USERNAME:eventara_user}
     password: ${DB_PASSWORD}          # No default — must be set in .env (never hardcode)
     hikari:
       maximum-pool-size: 5
@@ -15,7 +15,7 @@ spring:
 
 logging:
   level:
-    com.eventseat: DEBUG
+    com.eventara: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
 

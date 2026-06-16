@@ -1,4 +1,4 @@
-# EventSeat — Full-Stack Event Ticket Booking System
+﻿# Eventara — Full-Stack Event Ticket Booking System
 
 **Stack:** Flutter (mobile) + Spring Boot (REST API) + PostgreSQL + JWT RBAC
 
@@ -13,11 +13,11 @@
 
 ```
 Eventara/
-├── eventseat-backend/    # Spring Boot REST API
-└── eventseat-flutter/    # Flutter mobile app
+├── eventara-backend/    # Spring Boot REST API
+└── eventara-flutter/    # Flutter mobile app
 ```
 
-See `eventseat-backend/README.md` and `eventseat-flutter/README.md` for full file trees.
+See `eventara-backend/README.md` and `eventara-flutter/README.md` for full file trees.
 
 ---
 

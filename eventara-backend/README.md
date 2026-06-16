@@ -1,4 +1,4 @@
-# EventSeat — Spring Boot Backend
+﻿# Eventara — Spring Boot Backend
 
 Event ticket booking REST API with JWT-RBAC, seat locking, QR ticketing.
 
@@ -7,16 +7,16 @@ Event ticket booking REST API with JWT-RBAC, seat locking, QR ticketing.
 ## Backend File Tree
 
 ```
-eventseat-backend/
+eventara-backend/
 ├── pom.xml                                              # Maven build — all dependencies declared here
 ├── Dockerfile                                           # Multi-stage build (JDK 21 builder → JRE runtime)
 ├── .env.example                                         # Template for environment variables
 │
 ├── src/
 │   ├── main/
-│   │   ├── java/com/eventseat/
+│   │   ├── java/com/eventara/
 │   │   │   │
-│   │   │   ├── EventSeatApplication.java               # @SpringBootApplication entry point + Admin seed
+│   │   │   ├── EventaraApplication.java               # @SpringBootApplication entry point + Admin seed
 │   │   │   │
 │   │   │   ├── auth/                                   # ── FEATURE: Auth ──────────────────────────────
 │   │   │   │   ├── controller/
@@ -231,7 +231,7 @@ eventseat-backend/
 │   │               └── organizer-approval.html
 │   │
 │   └── test/
-│       └── java/com/eventseat/
+│       └── java/com/eventara/
 │           ├── auth/
 │           │   ├── AuthServiceTest.java                # Unit: register, login, refresh
 │           │   └── AuthControllerIntegrationTest.java  # @SpringBootTest MockMvc

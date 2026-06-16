@@ -1,5 +1,5 @@
-name: eventseat
-description: EventSeat — Event Ticket Booking Mobile App
+name: eventara
+description: Eventara — Event Ticket Booking Mobile App
 version: 1.0.0+1
 publish_to: 'none'
 
@@ -32,11 +32,8 @@ dependencies:
 
   # QR Code
   qr_flutter: ^4.1.0                  # QR code display widget
-  mobile_scanner: ^5.1.0              # Camera QR code scanner
-
   # UI
   flutter_svg: ^2.0.10+1              # SVG assets
-  cached_network_image: ^3.3.1        # Image caching
   shimmer: ^3.0.0                     # Skeleton loading effect
   intl: ^0.19.0                       # Date/number formatting
   flutter_dotenv: ^5.1.0              # .env file loader

@@ -1,4 +1,0 @@
-package com.eventseat.ticket.dto.response;
-
-// ticketId, bookingReference, eventTitle, seatInfo,
-// qrCodeBase64, ticketStatus, holderName

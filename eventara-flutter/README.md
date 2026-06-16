@@ -1,4 +1,4 @@
-# EventSeat — Flutter Frontend
+﻿# Eventara — Flutter Frontend
 
 Mobile app for browsing events, booking seats, and scanning QR tickets.
 Role-based navigation driven by JWT claims via Riverpod + go_router.
@@ -8,7 +8,7 @@ Role-based navigation driven by JWT claims via Riverpod + go_router.
 ## Flutter File Tree
 
 ```
-eventseat-flutter/
+eventara-flutter/
 ├── pubspec.yaml                                         # All dependencies (annotated)
 ├── .env                                                 # API_BASE_URL (flutter_dotenv — gitignored)
 ├── android/                                             # Platform placeholder (Flutter-managed)
