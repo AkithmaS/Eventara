@@ -1,0 +1,30 @@
+# ── Root-level gitignore (monorepo catch-all) ─────────────────────────────────
+# Each sub-project (eventara-backend/, eventara-flutter/) has its own .gitignore.
+# This file catches anything that slips through at the repo root.
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+secrets.properties
+credentials.json
+google-services.json
+GoogleService-Info.plist
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
