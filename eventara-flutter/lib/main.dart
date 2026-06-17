@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'features/landing/landing_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/router/app_router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Force portrait — landing page is a single-column scrollable layout
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  // Make the status bar transparent so the dark background bleeds through
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  runApp(const EventaraApp());
+  runApp(
+    // ProviderScope required for Riverpod
+    const ProviderScope(child: EventaraApp()),
+  );
 }
 
-class EventaraApp extends StatelessWidget {
+class EventaraApp extends ConsumerWidget {
   const EventaraApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+
+    return MaterialApp.router(
       title: 'Eventara',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -36,7 +40,7 @@ class EventaraApp extends StatelessWidget {
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: const Color(0xFF0D0B1E),
       ),
-      home: const LandingPage(),
+      routerConfig: router,
     );
   }
 }

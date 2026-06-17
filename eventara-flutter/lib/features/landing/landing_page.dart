@@ -1,4 +1,6 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../shared/widgets/brand_logo.dart';
 
 // ─── Colour tokens (matching the screenshots exactly) ────────────────────────
 const _bgDeep = Color(0xFF0D0B1E); // near-black purple
@@ -84,18 +86,10 @@ class _NavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'Eventara',
-            style: TextStyle(
-              color: _textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.3,
-            ),
-          ),
+          const BrandLogo(),
           _PillButton(
             label: 'Get Started',
-            onTap: () {},
+            onTap: () => context.go('/login'),
             gradient: const LinearGradient(
               colors: [_purple, Color(0xFF9B5CF6)],
             ),
@@ -177,7 +171,7 @@ class _HeroSection extends StatelessWidget {
               // Primary CTA
               _GradientButton(
                 label: 'Get Started',
-                onTap: () {},
+                onTap: () => context.go('/login'),
               ),
               const SizedBox(height: 14),
               // Secondary CTA
@@ -278,7 +272,7 @@ class _TicketCardsSection extends StatelessWidget {
 }
 
 /// A single rectangular pass card with dot-grid texture and floating animation.
-class _PassCard extends StatelessWidget {
+class _PassCard extends StatefulWidget {
   final IconData icon;
   final String label;
   final String sublabel;
@@ -296,98 +290,105 @@ class _PassCard extends StatelessWidget {
   });
 
   @override
+  State<_PassCard> createState() => _PassCardState();
+}
+
+class _PassCardState extends State<_PassCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     // Slight Z rotation to match the reference tilt
-    final angle = tiltLeft ? -0.06 : 0.06;
+    final angle = widget.tiltLeft ? -0.06 : 0.06;
 
-    return Transform.rotate(
-      angle: angle,
-      child: Container(
-        width: 420,
-        height: 200,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: gradientColors,
-          ),
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: gradientColors[0].withValues(alpha: 0.35),
-              blurRadius: 32,
-              spreadRadius: 2,
-              offset: const Offset(0, 12),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: Transform.rotate(
+          angle: angle,
+          child: Container(
+            width: 420,
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: widget.gradientColors,
+              ),
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.gradientColors[0].withValues(alpha: 0.35),
+                  blurRadius: 32,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 12),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Dot-grid texture
-            Positioned.fill(
-              child: CustomPaint(painter: _DotGridPainter()),
-            ),
-            // Content — arranged horizontally
-            Padding(
-              padding: const EdgeInsets.fromLTRB(40, 28, 40, 28),
-              child: Row(
-                children: [
-                  // Icon on the left
-                  Icon(icon, color: Colors.white, size: 52),
-                  const SizedBox(width: 32),
-                  // Text on the right
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title
-                        Text(
-                          label,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.8,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        // Divider
-                        Container(height: 2, width: 56, color: dividerColor),
-                        const SizedBox(height: 10),
-                        // Sublabel
-                        Text(
-                          sublabel,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.76),
-                            fontSize: 13,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Dot indicators on the far right
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: List.generate(3, (i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Container(
-                        width: i == 0 ? 10 : 7,
-                        height: i == 0 ? 10 : 7,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: i == 0
-                              ? Colors.white
-                              : Colors.white.withValues(alpha: 0.30),
+            child: Stack(
+              children: [
+                // Dot-grid texture
+                Positioned.fill(
+                  child: CustomPaint(painter: _DotGridPainter()),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 28, 40, 28),
+                  child: Row(
+                    children: [
+                      Icon(widget.icon, color: Colors.white, size: 52),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.label,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 1.8,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(height: 2, width: 56, color: widget.dividerColor),
+                            const SizedBox(height: 10),
+                            Text(
+                              widget.sublabel,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.76),
+                                fontSize: 13,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    )),
+                      const SizedBox(width: 16),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: List.generate(3, (i) => Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: Container(
+                            width: i == 0 ? 10 : 7,
+                            height: i == 0 ? 10 : 7,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: i == 0 ? Colors.white : Colors.white.withValues(alpha: 0.30),
+                            ),
+                          ),
+                        )),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -421,7 +422,7 @@ class _FeaturesSection extends StatelessWidget {
       iconColor: _purpleLight,
       title: 'Interactive Seating',
       description:
-          'Real-time 3D seat maps allow attendees to pick the perfect view with precision.',
+          'Easily browse available seats on a real-time seat map and pick your perfect spot in seconds.',
     ),
     _FeatureData(
       icon: Icons.qr_code_2_rounded,
@@ -432,7 +433,7 @@ class _FeaturesSection extends StatelessWidget {
     ),
     _FeatureData(
       icon: Icons.calendar_month_rounded,
-      iconColor: _peach,
+      iconColor: _purpleLight,
       title: 'Event Management',
       description:
           'End-to-end dashboard for organizers to track sales, attendees, and logistics.',
@@ -496,51 +497,77 @@ class _FeatureData {
   });
 }
 
-class _FeatureCard extends StatelessWidget {
+class _FeatureCard extends StatefulWidget {
   final _FeatureData data;
   const _FeatureCard({required this.data});
 
   @override
+  State<_FeatureCard> createState() => _FeatureCardState();
+}
+
+class _FeatureCardState extends State<_FeatureCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        color: _bgCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: _iconBg,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(data.icon, color: data.iconColor, size: 24),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            data.title,
-            style: const TextStyle(
-              color: _textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: double.infinity,
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            color: _hovered ? _bgCard.withValues(alpha: 0.9) : _bgCard,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: _hovered 
+                  ? _purple.withValues(alpha: 0.4)
+                  : Colors.white.withValues(alpha: 0.06),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            data.description,
-            style: const TextStyle(
-              color: _textSecondary,
-              fontSize: 14,
-              height: 1.6,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: _hovered ? _purple.withValues(alpha: 0.3) : _iconBg,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  widget.data.icon,
+                  color: _hovered ? _purpleLight : widget.data.iconColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                widget.data.title,
+                style: const TextStyle(
+                  color: _textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.data.description,
+                style: const TextStyle(
+                  color: _textSecondary,
+                  fontSize: 14,
+                  height: 1.6,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -830,71 +857,87 @@ class _TestimonialData {
   });
 }
 
-class _TestimonialCard extends StatelessWidget {
+class _TestimonialCard extends StatefulWidget {
   final _TestimonialData data;
   const _TestimonialCard({required this.data});
 
   @override
+  State<_TestimonialCard> createState() => _TestimonialCardState();
+}
+
+class _TestimonialCardState extends State<_TestimonialCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: _bgCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: _bgCard,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 22,
-                backgroundColor: data.avatarColor,
-                child: Text(
-                  data.initials,
-                  style: const TextStyle(
-                    color: _textPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    data.name,
-                    style: const TextStyle(
-                      color: _textPrimary,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: widget.data.avatarColor,
+                    child: Text(
+                      widget.data.initials,
+                      style: const TextStyle(
+                        color: _textPrimary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                  Text(
-                    data.role,
-                    style: const TextStyle(
-                      color: _textSecondary,
-                      fontSize: 12,
-                    ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.data.name,
+                        style: const TextStyle(
+                          color: _textPrimary,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        widget.data.role,
+                        style: const TextStyle(
+                          color: _textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              const SizedBox(height: 14),
+              Text(
+                widget.data.quote,
+                style: const TextStyle(
+                  color: _textSecondary,
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                  height: 1.6,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 14),
-          Text(
-            data.quote,
-            style: const TextStyle(
-              color: _textSecondary,
-              fontSize: 14,
-              fontStyle: FontStyle.italic,
-              height: 1.6,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -986,13 +1029,9 @@ class _Footer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Eventara',
-            style: TextStyle(
-              color: _textPrimary,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          const BrandLogo(
+            fontSize: 18,
+            textColor: _textPrimary,
           ),
           const SizedBox(height: 10),
           const Text(
@@ -1021,7 +1060,7 @@ class _Footer extends StatelessWidget {
           const Divider(color: Color(0xFF2A2540), thickness: 1),
           const SizedBox(height: 16),
           const Text(
-            '© 2025 Eventara. All rights reserved.',
+            '© 2026 Eventara. All rights reserved.',
             style: TextStyle(color: Color(0xFF5A5280), fontSize: 12),
           ),
         ],
@@ -1067,39 +1106,55 @@ class _FooterColumn extends StatelessWidget {
 // ─── SHARED BUTTON WIDGETS ───────────────────────────────────────────────────
 
 /// Full-width gradient button (primary CTA)
-class _GradientButton extends StatelessWidget {
+class _GradientButton extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
   const _GradientButton({required this.label, required this.onTap});
 
   @override
+  State<_GradientButton> createState() => _GradientButtonState();
+}
+
+class _GradientButtonState extends State<_GradientButton> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 58,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          gradient: const LinearGradient(
-            colors: [_gradStart, _gradEnd],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: _purple.withValues(alpha: 0.45),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: double.infinity,
+            height: 58,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              gradient: const LinearGradient(
+                colors: [_gradStart, _gradEnd],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _purple.withValues(alpha: 0.45),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: _textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.3,
+            child: Center(
+              child: Text(
+                widget.label,
+                style: const TextStyle(
+                  color: _textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.3,
+                ),
+              ),
             ),
           ),
         ),
@@ -1109,30 +1164,46 @@ class _GradientButton extends StatelessWidget {
 }
 
 /// Full-width dark outline button (secondary CTA)
-class _OutlineButton extends StatelessWidget {
+class _OutlineButton extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
   const _OutlineButton({required this.label, required this.onTap});
 
   @override
+  State<_OutlineButton> createState() => _OutlineButtonState();
+}
+
+class _OutlineButtonState extends State<_OutlineButton> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 58,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          color: const Color(0xFF1A1530),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: _textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            width: double.infinity,
+            height: 58,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: const Color(0xFF1A1530),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.12)),
+            ),
+            child: Center(
+              child: Text(
+                widget.label,
+                style: const TextStyle(
+                  color: _textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
         ),
@@ -1142,7 +1213,7 @@ class _OutlineButton extends StatelessWidget {
 }
 
 /// Small pill button used in the nav bar
-class _PillButton extends StatelessWidget {
+class _PillButton extends StatefulWidget {
   final String label;
   final VoidCallback onTap;
   final LinearGradient gradient;
@@ -1153,21 +1224,37 @@ class _PillButton extends StatelessWidget {
   });
 
   @override
+  State<_PillButton> createState() => _PillButtonState();
+}
+
+class _PillButtonState extends State<_PillButton> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: _textPrimary,
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            decoration: BoxDecoration(
+              gradient: widget.gradient,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Text(
+              widget.label,
+              style: const TextStyle(
+                color: _textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ),
       ),
