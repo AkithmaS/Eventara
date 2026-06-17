@@ -1,11 +1,11 @@
 {
-    "name": "eventara",
-    "short_name": "eventara",
+    "name": "Eventara — Event Ticket Booking",
+    "short_name": "Eventara",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0D0B1E",
+    "theme_color": "#7B5CF6",
+    "description": "Premium event ticket booking platform with secure ticketing, interactive seating, and seamless event management.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
