@@ -14,10 +14,19 @@ import '../../features/customer/presentation/pages/booking_confirmation_page.dar
 import '../../features/customer/presentation/pages/ticket_display_page.dart';
 import '../../features/customer/presentation/pages/booking_history_page.dart';
 import '../../features/customer/presentation/pages/profile_page.dart';
+import '../../features/organizer/presentation/pages/dashboard_page.dart';
+import '../../features/organizer/presentation/pages/create_event_page.dart';
+import '../../features/organizer/presentation/pages/edit_event_page.dart';
+import '../../features/organizer/presentation/pages/myevents.dart';
+import '../../features/organizer/presentation/pages/event_submissions_page.dart';
+import '../../features/organizer/presentation/pages/event_bookings_list_page.dart';
+import '../../features/organizer/presentation/pages/qr_scanner_page.dart';
+import '../../features/organizer/presentation/pages/seat_map_editor_page.dart';
+import '../../features/organizer/presentation/pages/pricing_setup_page.dart';
+import '../../features/organizer/presentation/pages/organizer_reports_page.dart';
+import '../../features/organizer/presentation/pages/organizer_profile_page.dart';
 import '../../features/landing/landing_page.dart';
 import 'app_routes.dart';
-
-// ── Auth guard helpers ────────────────────────────────────────────────────────
 
 /// Set to true during UI development to bypass auth checks.
 /// Flip to false once login/JWT flow is wired up.
@@ -26,16 +35,24 @@ const bool _bypassGuard = true;
 /// Reads the stored JWT role from SharedPreferences.
 Future<String?> _readRole() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('user_role'); // stored as 'ROLE_CUSTOMER' etc.
+  return prefs.getString('user_role'); // stored as 'ROLE_CUSTOMER', 'ROLE_ORGANIZER', etc.
 }
 
-/// Redirect callback used by every /customer/* route.
-/// Returns null (allow) or a redirect path (deny).
+/// Redirect callback for customer routes.
 Future<String?> _customerGuard(GoRouterState state) async {
   if (_bypassGuard) return null; // ← remove when auth is ready
   final role = await _readRole();
   if (role == null) return AppRoutes.login;
   if (role != 'ROLE_CUSTOMER') return AppRoutes.login;
+  return null;
+}
+
+/// Redirect callback for organizer routes.
+Future<String?> _organizerGuard(GoRouterState state) async {
+  if (_bypassGuard) return null; // ← remove when auth is ready
+  final role = await _readRole();
+  if (role == null) return AppRoutes.login;
+  if (role != 'ROLE_ORGANIZER') return AppRoutes.login;
   return null;
 }
 
@@ -138,6 +155,89 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.customerProfile,
             redirect: (context, state) async => _customerGuard(state),
             builder: (context, state) => const ProfilePage(),
+          ),
+        ],
+      ),
+
+      // ── Organizer shell ───────────────────────────────────────────────────────
+      // All /organizer/* routes live here. Each route redirects if not authorised.
+      ShellRoute(
+        builder: (context, state, child) => child,
+        routes: [
+          GoRoute(
+            name: 'organizerDashboard',
+            path: AppRoutes.organizerDashboard,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const OrganizerDashboardPage(),
+          ),
+          GoRoute(
+            name: 'organizerMyEvents',
+            path: AppRoutes.organizerMyEvents,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const MyEventsPage(),
+          ),
+          GoRoute(
+            name: 'organizerCreateEvent',
+            path: AppRoutes.organizerCreateEvent,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const CreateEventPage(),
+          ),
+          GoRoute(
+            name: 'organizerEditEvent',
+            path: AppRoutes.organizerEditEvent,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return EditEventPage(eventId: id);
+            },
+          ),
+          GoRoute(
+            name: 'organizerEventSubmissions',
+            path: AppRoutes.organizerEventSubmissions,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const EventSubmissionsPage(),
+          ),
+          GoRoute(
+            name: 'organizerBookings',
+            path: AppRoutes.organizerBookings,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const EventBookingsListPage(),
+          ),
+          GoRoute(
+            name: 'organizerQRScanner',
+            path: AppRoutes.organizerQRScanner,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const QRScannerPage(),
+          ),
+          GoRoute(
+            name: 'organizerSeatMapEditor',
+            path: AppRoutes.organizerSeatMapEditor,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return SeatMapEditorPage(eventId: id);
+            },
+          ),
+          GoRoute(
+            name: 'organizerPricingSetup',
+            path: AppRoutes.organizerPricingSetup,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return PricingSetupPage(eventId: id);
+            },
+          ),
+          GoRoute(
+            name: 'organizerReports',
+            path: AppRoutes.organizerReports,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const OrganizerReportsPage(),
+          ),
+          GoRoute(
+            name: 'organizerProfile',
+            path: AppRoutes.organizerProfile,
+            redirect: (context, state) async => _organizerGuard(state),
+            builder: (context, state) => const OrganizerProfilePage(),
           ),
         ],
       ),
