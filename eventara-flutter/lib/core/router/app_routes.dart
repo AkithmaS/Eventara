@@ -31,6 +31,16 @@ class AppRoutes {
   static const organizerReports = '/organizer/reports';
   static const organizerProfile = '/organizer/profile';
 
+  // ── Admin ──────────────────────────────────────────────────────────────
+  static const adminDashboard = '/admin/dashboard';
+  static const adminUsers = '/admin/users';
+  static const adminEvents = '/admin/events';
+  static const adminSettings = '/admin/settings';
+  static const adminOrganizerApplications = '/admin/organizer-applications';
+  static const adminCategories = '/admin/categories';
+  static const adminAnalytics = '/admin/analytics';
+  static const adminAuditLog = '/admin/audit-log';
+
   // ── Helpers to build parameterised paths ─────────────────────────────────
   static String buildCustomerEventDetail(String id) => '/customer/event-detail/$id';
   static String buildCustomerSeatMap(String id) => '/customer/seat-map/$id';

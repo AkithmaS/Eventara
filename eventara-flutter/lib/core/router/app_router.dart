@@ -25,6 +25,13 @@ import '../../features/organizer/presentation/pages/seat_map_editor_page.dart';
 import '../../features/organizer/presentation/pages/pricing_setup_page.dart';
 import '../../features/organizer/presentation/pages/organizer_reports_page.dart';
 import '../../features/organizer/presentation/pages/organizer_profile_page.dart';
+import '../../features/admin/presentation/pages/dashboard_page.dart' as admin;
+import '../../features/admin/presentation/pages/organizer_applications_page.dart' as admin_apps;
+import '../../features/admin/presentation/pages/category_management_page.dart' as admin_categories;
+import '../../features/admin/presentation/pages/analytics_page.dart' as admin_analytics;
+import '../../features/admin/presentation/pages/audit_log_page.dart' as admin_audit_log;
+import '../../features/admin/presentation/pages/settings_page.dart' as admin_settings;
+import '../../features/admin/presentation/pages/user_management_page.dart' as admin_users;
 import '../../features/landing/landing_page.dart';
 import 'app_routes.dart';
 
@@ -53,6 +60,15 @@ Future<String?> _organizerGuard(GoRouterState state) async {
   final role = await _readRole();
   if (role == null) return AppRoutes.login;
   if (role != 'ROLE_ORGANIZER') return AppRoutes.login;
+  return null;
+}
+
+/// Redirect callback for admin routes.
+Future<String?> _adminGuard(GoRouterState state) async {
+  if (_bypassGuard) return null; // ← remove when auth is ready
+  final role = await _readRole();
+  if (role == null) return AppRoutes.login;
+  if (role != 'ROLE_ADMIN') return AppRoutes.login;
   return null;
 }
 
@@ -238,6 +254,62 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.organizerProfile,
             redirect: (context, state) async => _organizerGuard(state),
             builder: (context, state) => const OrganizerProfilePage(),
+          ),
+        ],
+      ),
+
+      // ── Admin shell ────────────────────────────────────────────────────────
+      // All /admin/* routes live here. Each route redirects if not authorised.
+      ShellRoute(
+        builder: (context, state, child) => child,
+        routes: [
+          GoRoute(
+            name: 'adminDashboard',
+            path: AppRoutes.adminDashboard,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin.AdminDashboardPage(),
+          ),
+          GoRoute(
+            name: 'adminUsers',
+            path: AppRoutes.adminUsers,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_users.UserManagementPage(),
+          ),
+          GoRoute(
+            name: 'adminEvents',
+            path: AppRoutes.adminEvents,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin.AdminDashboardPage(),
+          ),
+          GoRoute(
+            name: 'adminSettings',
+            path: AppRoutes.adminSettings,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_settings.AdminSettingsPage(),
+          ),
+          GoRoute(
+            name: 'adminOrganizerApplications',
+            path: AppRoutes.adminOrganizerApplications,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_apps.OrganizerApplicationsPage(),
+          ),
+          GoRoute(
+            name: 'adminCategories',
+            path: AppRoutes.adminCategories,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_categories.CategoryManagementPage(),
+          ),
+          GoRoute(
+            name: 'adminAnalytics',
+            path: AppRoutes.adminAnalytics,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_analytics.AnalyticsPage(),
+          ),
+          GoRoute(
+            name: 'adminAuditLog',
+            path: AppRoutes.adminAuditLog,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) => const admin_audit_log.AuditLogPage(),
           ),
         ],
       ),
