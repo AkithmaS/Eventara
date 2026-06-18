@@ -27,35 +27,41 @@ class _HomePageState extends ConsumerState<HomePage> {
   final _searchCtrl = TextEditingController();
 
   final List<CategoryChip> _categories = [
-    CategoryChip(label: 'MUSIC', icon: '🎵'),
-    CategoryChip(label: 'SPORTS', icon: '⚽'),
-    CategoryChip(label: 'THEATRE', icon: '🎭'),
-    CategoryChip(label: 'COMEDY', icon: '😂'),
-    CategoryChip(label: 'MEETUP', icon: '👥'),
-    CategoryChip(label: 'FOOD', icon: '🍽️'),
-    CategoryChip(label: 'MORE', icon: '···'),
+    CategoryChip(label: 'Music &\nConcerts', icon: '🎵'),
+    CategoryChip(label: 'Sports', icon: '⚽'),
+    CategoryChip(label: 'Theatre &\nPerforming Arts', icon: '🎭'),
+    CategoryChip(label: 'Comedy\nShows', icon: '😂'),
+    CategoryChip(label: 'Conferences\n& Seminars', icon: '🎤'),
+    CategoryChip(label: 'Workshops', icon: '🛠️'),
+    CategoryChip(label: 'Film &\nCinema', icon: '🎬'),
+    CategoryChip(label: 'Cultural\nEvents', icon: '🎨'),
+    CategoryChip(label: 'Family &\nKids', icon: '👨‍👩‍👧‍👦'),
+    CategoryChip(label: 'Other', icon: '📌'),
   ];
 
   final List<EventCard> _upcomingEvents = [
     EventCard(
+      id: '1',
       category: 'MUSIC',
       title: 'Jazz Under the Stars',
       location: 'Sep 05 • Rooftop Terrace',
-      price: 'LKR 45.00',
+      price: 'LKR 4500.00',
       image: 'assets/images/jazz.jpg',
     ),
     EventCard(
+      id: '2',
       category: 'COMEDY',
       title: 'Stand-up Night',
       location: 'Sep 12 • The Laugh Factory',
-      price: 'LKR 30.00',
+      price: 'LKR 3000.00',
       image: 'assets/images/comedy.jpg',
     ),
     EventCard(
+      id: '3',
       category: 'MUSIC',
       title: 'Stadium Rock Tour',
       location: 'Sep 28 • National Arena',
-      price: 'LKR 180.00',
+      price: 'LKR 1800.00',
       image: 'assets/images/stadium.jpg',
     ),
   ];
@@ -121,7 +127,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => context.go(AppRoutes.customerAllEvents),
                     child: const Text(
                       'See all',
                       style: TextStyle(
@@ -181,35 +187,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       // ── Bottom Navigation Bar ────────────────────────────────────────────
       bottomNavigationBar: _BottomNavBar(),
-      // ── Floating Action Button ───────────────────────────────────────────
-      floatingActionButton: MouseRegion(
-        onEnter: (_) {},
-        onExit: (_) {},
-        child: Container(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [_gradStart, _gradEnd],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: _purple.withValues(alpha: 0.5),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.add_rounded,
-              color: _textPrimary,
-              size: 28,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
@@ -566,7 +543,7 @@ class _FeaturedEventCardState extends State<_FeaturedEventCard> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: const Text(
-                        'LKR 129',
+                        'LKR 2000',
                         style: TextStyle(
                           color: _bgDeep,
                           fontSize: 14,
@@ -587,6 +564,7 @@ class _FeaturedEventCardState extends State<_FeaturedEventCard> {
 
 /// Event card model
 class EventCard {
+  final String id;
   final String category;
   final String title;
   final String location;
@@ -594,6 +572,7 @@ class EventCard {
   final String image;
 
   EventCard({
+    required this.id,
     required this.category,
     required this.title,
     required this.location,
@@ -626,7 +605,7 @@ class _UpcomingEventCardState extends State<_UpcomingEventCard> {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         child: GestureDetector(
-          onTap: () {},
+          onTap: () => context.go(AppRoutes.buildCustomerEventDetail(widget.event.id)),
           child: Container(
             decoration: BoxDecoration(
               color: _bgCard,
@@ -789,8 +768,7 @@ class _BottomNavBarState extends State<_BottomNavBar> {
                         context.go(AppRoutes.customerHome);
                         break;
                       case 1:
-                        // Explore — reuses home for now
-                        context.go(AppRoutes.customerHome);
+                        context.go(AppRoutes.customerAllEvents);
                         break;
                       case 2:
                         context.go(AppRoutes.customerMyTickets);

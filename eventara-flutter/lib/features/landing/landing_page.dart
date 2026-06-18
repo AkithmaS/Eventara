@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../shared/widgets/brand_logo.dart';
+import '../../core/router/app_routes.dart';
 
 // ─── Colour tokens (matching the screenshots exactly) ────────────────────────
 const _bgDeep = Color(0xFF0D0B1E); // near-black purple
@@ -87,13 +88,7 @@ class _NavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const BrandLogo(),
-          _PillButton(
-            label: 'Get Started',
-            onTap: () => context.go('/login'),
-            gradient: const LinearGradient(
-              colors: [_purple, Color(0xFF9B5CF6)],
-            ),
-          ),
+          const SizedBox.shrink(),
         ],
       ),
     );
@@ -177,7 +172,7 @@ class _HeroSection extends StatelessWidget {
               // Secondary CTA
               _OutlineButton(
                 label: 'Become an Organizer',
-                onTap: () {},
+                onTap: () => context.go('/organizer-apply'),
               ),
             ],
           ),
@@ -196,11 +191,11 @@ class _TicketCardsSection extends StatelessWidget {
     required this.scatterCtrl,
   });
 
-  static const double _cardW = 420.0;
-  static const double _cardH = 200.0;
+  static const double _cardW = 300.0;
+  static const double _cardH = 140.0;
   // Card 2 starts this many px to the right and below card 1
-  static const double _offsetX = 140.0;
-  static const double _offsetY = _cardH + 28.0; // card height + gap
+  static const double _offsetX = 100.0;
+  static const double _offsetY = _cardH + 20.0; // card height + gap
   // Float travel distance
   static const double _floatAmp = 8.0;
 
@@ -311,8 +306,8 @@ class _PassCardState extends State<_PassCard> {
         child: Transform.rotate(
           angle: angle,
           child: Container(
-            width: 420,
-            height: 200,
+            width: 300,
+            height: 140,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -336,11 +331,11 @@ class _PassCardState extends State<_PassCard> {
                   child: CustomPaint(painter: _DotGridPainter()),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 28, 40, 28),
+                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
                   child: Row(
                     children: [
-                      Icon(widget.icon, color: Colors.white, size: 52),
-                      const SizedBox(width: 32),
+                      Icon(widget.icon, color: Colors.white, size: 36),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,20 +344,20 @@ class _PassCardState extends State<_PassCard> {
                               widget.label,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 16,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w800,
-                                letterSpacing: 1.8,
+                                letterSpacing: 1.2,
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Container(height: 2, width: 56, color: widget.dividerColor),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 6),
+                            Container(height: 2, width: 40, color: widget.dividerColor),
+                            const SizedBox(height: 6),
                             Text(
                               widget.sublabel,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.76),
-                                fontSize: 13,
-                                letterSpacing: 0.5,
+                                fontSize: 10,
+                                letterSpacing: 0.3,
                               ),
                             ),
                           ],
@@ -576,37 +571,24 @@ class _FeatureCardState extends State<_FeatureCard> {
 // ─── 5. EXPLORE BY CATEGORY ──────────────────────────────────────────────────
 class _CatData {
   final String image;
-  final String label;
-  const _CatData({required this.image, required this.label});
+  final bool isLandscape;
+  const _CatData({required this.image, required this.isLandscape});
 }
 
 class _ExploreByCategorySection extends StatelessWidget {
-  // Gap between every tile
-  static const double _gap = 8;
-
-  // Six categories mapped to their photos
+  // Six categories mapped to their photos with aspect ratios
+  // landscape = 16:9, portrait = 9:16
   static const _cats = [
-    _CatData(image: 'assets/images/concert.jpg',    label: 'Entertainment'),
-    _CatData(image: 'assets/images/sports.jpg',     label: 'Sports'),
-    _CatData(image: 'assets/images/conference.jpg', label: 'Conferences'),
-    _CatData(image: 'assets/images/esport.jpg',     label: 'Esports'),
-    _CatData(image: 'assets/images/workshop.jpg',   label: 'Workshops'),
-    _CatData(image: 'assets/images/wellness.jpg',   label: 'Wellness'),
+    _CatData(image: 'assets/images/concert.jpg',    isLandscape: true),    // Entertainment
+    _CatData(image: 'assets/images/sports.jpg',     isLandscape: false),   // Sports
+    _CatData(image: 'assets/images/conference.jpg', isLandscape: true),    // Conferences
+    _CatData(image: 'assets/images/esport.jpg',     isLandscape: false),   // Esports
+    _CatData(image: 'assets/images/workshop.jpg',   isLandscape: true),    // Workshops
+    _CatData(image: 'assets/images/wellness.jpg',   isLandscape: false),   // Wellness
   ];
 
   @override
   Widget build(BuildContext context) {
-    // The mosaic uses a 3-unit column grid (each "unit" = 1 flex part).
-    // Portrait tiles  → 1 unit wide, 200 px tall
-    // Landscape tiles → 2 units wide, 140 px tall
-    //
-    // Row 1: Entertainment landscape (2u) | Sports portrait (1u)
-    // Row 2: Conferences portrait (1u) | Esports landscape (2u)
-    // Row 3: Workshops landscape (2u) | Wellness portrait (1u)
-
-    const double landscapeH = 140;
-    const double portraitH  = 200;
-
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -617,76 +599,89 @@ class _ExploreByCategorySection extends StatelessWidget {
       ),
       padding: const EdgeInsets.fromLTRB(20, 56, 20, 48),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Header ──────────────────────────────────────────────────────
-          const Text(
-            'Explore by Category',
-            style: TextStyle(
-              color: _textPrimary,
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
+          RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                height: 1.2,
+                letterSpacing: -0.5,
+                color: _textPrimary,
+              ),
+              children: [
+                const TextSpan(text: 'Trusted by\nindustries\n'),
+                TextSpan(
+                  text: 'like yours',
+                  style: TextStyle(
+                    foreground: Paint()
+                      ..shader = const LinearGradient(
+                        colors: [_purpleLight, _peach],
+                      ).createShader(Rect.fromLTWH(0, 0, 200, 60)),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Find events that match your passion',
-            style: TextStyle(color: _textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 32),
 
-          // ── Row 1: landscape + portrait ──────────────────────────────────
+          // ── Row 1: Landscape (full width) ────────────────────────────
+          SizedBox(
+            width: double.infinity,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: _CatTile(data: _cats[0]),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // ── Row 2: Two Portraits side by side ────────────────────────
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Entertainment — landscape (flex 2)
               Expanded(
-                flex: 2,
-                child: _CatTile(data: _cats[0], height: landscapeH),
+                child: AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: _CatTile(data: _cats[1]),
+                ),
               ),
-              const SizedBox(width: _gap),
-              // Sports — portrait (flex 1)
+              const SizedBox(width: 12),
               Expanded(
-                flex: 1,
-                child: _CatTile(data: _cats[1], height: portraitH),
+                child: AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: _CatTile(data: _cats[2]),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: _gap),
+          const SizedBox(height: 12),
 
-          // ── Row 2: portrait + landscape ──────────────────────────────────
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Conferences — portrait (flex 1)
-              Expanded(
-                flex: 1,
-                child: _CatTile(data: _cats[2], height: portraitH),
-              ),
-              const SizedBox(width: _gap),
-              // Esports — landscape (flex 2)
-              Expanded(
-                flex: 2,
-                child: _CatTile(data: _cats[3], height: landscapeH),
-              ),
-            ],
+          // ── Row 3: Landscape (full width) ────────────────────────────
+          SizedBox(
+            width: double.infinity,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: _CatTile(data: _cats[3]),
+            ),
           ),
-          const SizedBox(height: _gap),
+          const SizedBox(height: 12),
 
-          // ── Row 3: landscape + portrait ──────────────────────────────────
+          // ── Row 4: Two Portraits side by side ────────────────────────
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Workshops — landscape (flex 2)
               Expanded(
-                flex: 2,
-                child: _CatTile(data: _cats[4], height: landscapeH),
+                child: AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: _CatTile(data: _cats[4]),
+                ),
               ),
-              const SizedBox(width: _gap),
-              // Wellness — portrait (flex 1)
+              const SizedBox(width: 12),
               Expanded(
-                flex: 1,
-                child: _CatTile(data: _cats[5], height: portraitH),
+                child: AspectRatio(
+                  aspectRatio: 9 / 16,
+                  child: _CatTile(data: _cats[5]),
+                ),
               ),
             ],
           ),
@@ -696,89 +691,82 @@ class _ExploreByCategorySection extends StatelessWidget {
   }
 }
 
-/// Single photo tile — label + arrow pinned to the bottom-left.
+/// Single photo tile with smooth animations (no labels)
 class _CatTile extends StatefulWidget {
   final _CatData data;
-  final double height;
-  const _CatTile({required this.data, required this.height});
+  const _CatTile({required this.data});
 
   @override
   State<_CatTile> createState() => _CatTileState();
 }
 
-class _CatTileState extends State<_CatTile> {
-  bool _hovered = false;
+class _CatTileState extends State<_CatTile> with TickerProviderStateMixin {
+  late AnimationController _scaleCtrl;
+  late AnimationController _overlayCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      reverseDuration: const Duration(milliseconds: 300),
+    );
+    _overlayCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+      reverseDuration: const Duration(milliseconds: 250),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleCtrl.dispose();
+    _overlayCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit:  (_) => setState(() => _hovered = false),
-      child: AnimatedScale(
-        scale: _hovered ? 1.03 : 1.0,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: SizedBox(
-            height: widget.height,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // ── Photo ────────────────────────────────────────────────
-                Image.asset(widget.data.image, fit: BoxFit.cover),
-                // ── Bottom gradient scrim ─────────────────────────────────
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.70),
-                      ],
-                      stops: const [0.40, 1.0],
+      onEnter: (_) {
+        _scaleCtrl.forward();
+        _overlayCtrl.forward();
+      },
+      onExit: (_) {
+        _scaleCtrl.reverse();
+        _overlayCtrl.reverse();
+      },
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_scaleCtrl, _overlayCtrl]),
+        builder: (context, child) {
+          final scale = Tween<double>(begin: 1.0, end: 1.08).evaluate(_scaleCtrl);
+          final overlayOpacity = Tween<double>(begin: 0.3, end: 0.5).evaluate(_overlayCtrl);
+          
+          return Transform.scale(
+            scale: scale,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: SizedBox.expand(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // ── Photo Background ────────────────────────────────
+                    Image.asset(
+                      widget.data.image,
+                      fit: BoxFit.cover,
                     ),
-                  ),
+                    
+                    // ── Dark Overlay ────────────────────────────────────
+                    Container(
+                      color: Colors.black.withValues(alpha: overlayOpacity),
+                    ),
+                  ],
                 ),
-                // ── Hover tint ────────────────────────────────────────────
-                AnimatedOpacity(
-                  opacity: _hovered ? 0.18 : 0.0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Container(color: _purple),
-                ),
-                // ── Label ────────────────────────────────────────────────
-                Positioned(
-                  left: 12,
-                  bottom: 12,
-                  right: 12,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          widget.data.label,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            shadows: [
-                              Shadow(color: Colors.black54, blurRadius: 6),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        color: Colors.white,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -799,7 +787,7 @@ class _TestimonialsSection extends StatelessWidget {
       name: 'Sarah Jenkins',
       role: 'Tech Summit Founder',
       quote:
-          '"The interactive 3D map is a game changer. Our VIP seats sold out 40% faster than last year."',
+          '"The interactive 2D map is a game changer. Our VIP seats sold out 40% faster than last year."',
       initials: 'SJ',
       avatarColor: Color(0xFF3D1F35),
     ),
@@ -993,21 +981,24 @@ class _CtaBanner extends StatelessWidget {
             const SizedBox(height: 28),
             SizedBox(
               width: double.infinity,
-              child: TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  backgroundColor: const Color(0xFF0D0B1E),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+              child: _AnimatedButtonWrapper(
+                onTap: () => context.go(AppRoutes.organizerCreateEvent),
+                child: TextButton(
+                  onPressed: () => context.go(AppRoutes.organizerCreateEvent),
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFF0D0B1E),
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Launch Your Event',
-                  style: TextStyle(
-                    color: _textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
+                  child: const Text(
+                    'Launch Your Event',
+                    style: TextStyle(
+                      color: _textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -1104,6 +1095,37 @@ class _FooterColumn extends StatelessWidget {
 }
 
 // ─── SHARED BUTTON WIDGETS ───────────────────────────────────────────────────
+
+/// Animated button wrapper - applies common scale animation (1.0→1.03, 200ms, easeOut)
+class _AnimatedButtonWrapper extends StatefulWidget {
+  final Widget child;
+  final VoidCallback onTap;
+  const _AnimatedButtonWrapper({required this.child, required this.onTap});
+
+  @override
+  State<_AnimatedButtonWrapper> createState() => _AnimatedButtonWrapperState();
+}
+
+class _AnimatedButtonWrapperState extends State<_AnimatedButtonWrapper> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: AnimatedScale(
+        scale: _hovered ? 1.03 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
 
 /// Full-width gradient button (primary CTA)
 class _GradientButton extends StatefulWidget {

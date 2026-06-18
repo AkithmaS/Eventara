@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:eventara/core/router/app_routes.dart';
 
 // ─── Colour tokens ──────────────────────────────────────────────────────────
 const _bgDeep = Color(0xFF0D0B1E);
@@ -406,35 +408,38 @@ class _BookingConfirmationPageState extends State<BookingConfirmationPage>
             // ── View My Bookings Button ─────────────────────────────────
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: _bgCard,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+              child: GestureDetector(
+                onTap: () => context.go(AppRoutes.customerMyTickets),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    color: _bgCard,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.1),
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.bookmark_rounded,
-                        color: _textPrimary,
-                        size: 16,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'View My Bookings',
-                        style: TextStyle(
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.bookmark_rounded,
                           color: _textPrimary,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                          size: 16,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 8),
+                        Text(
+                          'View My Bookings',
+                          style: TextStyle(
+                            color: _textPrimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

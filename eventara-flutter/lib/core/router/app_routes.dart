@@ -10,6 +10,7 @@ class AppRoutes {
 
   // ── Customer ──────────────────────────────────────────────────────────────
   static const customerHome = '/customer/home';
+  static const customerAllEvents = '/customer/all-events';
   static const customerEventDetail = '/customer/event-detail/:id';
   static const customerSeatMap = '/customer/seat-map/:id';
   static const customerPayment = '/customer/payment/:id';
@@ -45,8 +46,16 @@ class AppRoutes {
   static String buildCustomerEventDetail(String id) => '/customer/event-detail/$id';
   static String buildCustomerSeatMap(String id) => '/customer/seat-map/$id';
   static String buildCustomerPayment(String id) => '/customer/payment/$id';
-  static String buildCustomerBookingConfirmation(String id) =>
-      '/customer/booking-confirmation/$id';
+  static String buildCustomerBookingConfirmation(
+    String id, {
+    required String eventName,
+    required String eventDate,
+    required String venue,
+    required String holderName,
+    required String seatsCount,
+    required String totalPrice,
+  }) =>
+      '/customer/booking-confirmation/$id?eventName=$eventName&eventDate=$eventDate&venue=$venue&holderName=$holderName&seatsCount=$seatsCount&totalPrice=$totalPrice';
   static String buildOrganizerEditEvent(String id) => '/organizer/edit-event/$id';
   static String buildOrganizerSeatMapEditor(String id) => '/organizer/seat-map-editor/$id';
   static String buildOrganizerPricingSetup(String id) => '/organizer/pricing-setup/$id';

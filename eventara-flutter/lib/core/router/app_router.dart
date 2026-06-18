@@ -7,6 +7,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/organizer_apply_page.dart';
 import '../../features/customer/presentation/pages/home_page.dart';
+import '../../features/customer/presentation/pages/all_events.dart';
 import '../../features/customer/presentation/pages/event_detail_page.dart';
 import '../../features/customer/presentation/pages/seat_map_page.dart';
 import '../../features/customer/presentation/pages/payment_page.dart';
@@ -109,6 +110,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.customerHome,
             redirect: (context, state) async => _customerGuard(state),
             builder: (context, state) => const HomePage(),
+          ),
+          GoRoute(
+            name: 'customerAllEvents',
+            path: AppRoutes.customerAllEvents,
+            redirect: (context, state) async => _customerGuard(state),
+            builder: (context, state) => const AllEventsPage(),
           ),
           GoRoute(
             name: 'customerEventDetail',

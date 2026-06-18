@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:eventara/core/router/app_routes.dart';
 
 // ─── Colour tokens ──────────────────────────────────────────────────────────
 const _bgDeep = Color(0xFF0D0B1E);
@@ -35,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => context.go('/home'),
+                      onTap: () => context.go(AppRoutes.customerHome),
                       child: Container(
                         width: 40,
                         height: 40,
@@ -233,12 +234,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: 'Notifications',
                       onTap: () {},
                     ),
-                    const SizedBox(height: 8),
-                    _ProfileMenuItem(
-                      icon: Icons.language_rounded,
-                      title: 'Language Preference',
-                      onTap: () {},
-                    ),
                   ],
                 ),
               ),
@@ -280,55 +275,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               const SizedBox(height: 24),
-              // ── Support Section ─────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Support',
-                      style: TextStyle(
-                        color: _textSecondary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _ProfileMenuItem(
-                      icon: Icons.help_outline_rounded,
-                      title: 'Help & FAQ',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 8),
-                    _ProfileMenuItem(
-                      icon: Icons.phone_outlined,
-                      title: 'Contact Support',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 8),
-                    _ProfileMenuItem(
-                      icon: Icons.star_outline_rounded,
-                      title: 'Rate the App',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 8),
-                    _ProfileMenuItem(
-                      icon: Icons.description_outlined,
-                      title: 'Terms of Service',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 8),
-                    _ProfileMenuItem(
-                      icon: Icons.shield_outlined,
-                      title: 'Privacy Policy',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 32),
               // ── Logout Button ───────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -390,6 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
+      bottomNavigationBar: _BottomNavBar(),
     );
   }
 
@@ -506,6 +453,94 @@ class _ProfileMenuItemState extends State<_ProfileMenuItem> {
                 size: 16,
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Bottom Navigation Bar
+class _BottomNavBar extends StatefulWidget {
+  const _BottomNavBar();
+
+  @override
+  State<_BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<_BottomNavBar> {
+  int _selectedIndex = 3; // Profile is index 3
+
+  final List<Map<String, dynamic>> _navItems = [
+    {'icon': Icons.home_rounded, 'label': 'Home'},
+    {'icon': Icons.search_rounded, 'label': 'Explore'},
+    {'icon': Icons.bookmark_rounded, 'label': 'My Tickets'},
+    {'icon': Icons.person_rounded, 'label': 'Profile'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _bgCard,
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_navItems.length, (index) {
+              final item = _navItems[index];
+              final isSelected = _selectedIndex == index;
+              return MouseRegion(
+                onEnter: (_) {},
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => _selectedIndex = index);
+                    switch (index) {
+                      case 0:
+                        context.go(AppRoutes.customerHome);
+                        break;
+                      case 1:
+                        context.go(AppRoutes.customerAllEvents);
+                        break;
+                      case 2:
+                        context.go(AppRoutes.customerMyTickets);
+                        break;
+                      case 3:
+                        context.go(AppRoutes.customerProfile);
+                        break;
+                    }
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        item['icon'],
+                        color: isSelected ? _purpleLight : _textSecondary,
+                        size: 24,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item['label'],
+                        style: TextStyle(
+                          color: isSelected ? _purpleLight : _textSecondary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
           ),
         ),
       ),
