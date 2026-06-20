@@ -28,7 +28,7 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
         backgroundColor: _bgDeep,
         elevation: 0,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => context.pop(),
           child: const Icon(Icons.arrow_back_rounded, color: _textPrimary),
         ),
         title: const Text(
@@ -159,54 +159,6 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                 ),
               ),
 
-              // ── Platform Settings ───────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'PLATFORM SETTINGS',
-                      style: TextStyle(
-                        color: _textSecondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _SettingsTile(
-                      icon: Icons.category_rounded,
-                      title: 'Event Categories',
-                      subtitle: 'Manage event types',
-                      onTap: () => context.go(AppRoutes.adminCategories),
-                    ),
-                    const SizedBox(height: 10),
-                    _SettingsTile(
-                      icon: Icons.shield_rounded,
-                      title: 'Organizer Policies',
-                      subtitle: 'Set verification rules',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 10),
-                    _SettingsTile(
-                      icon: Icons.description_rounded,
-                      title: 'Terms of Service',
-                      subtitle: 'Platform legal terms',
-                      onTap: () {},
-                    ),
-                    const SizedBox(height: 10),
-                    _SettingsTile(
-                      icon: Icons.privacy_tip_rounded,
-                      title: 'Privacy Policy',
-                      subtitle: 'Data protection rules',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
               // ── Account Settings ───────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -241,48 +193,6 @@ class _AdminSettingsPageState extends State<AdminSettingsPage> {
                       icon: Icons.notifications_rounded,
                       title: 'Notification Preferences',
                       subtitle: 'Alert settings',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // ── System Settings ────────────────────────────────────────
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'SYSTEM',
-                      style: TextStyle(
-                        color: _textSecondary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _SettingsTile(
-                      icon: Icons.bar_chart_rounded,
-                      title: 'Analytics',
-                      subtitle: 'View platform metrics',
-                      onTap: () => context.go(AppRoutes.adminAnalytics),
-                    ),
-                    const SizedBox(height: 10),
-                    _SettingsTile(
-                      icon: Icons.history_rounded,
-                      title: 'Audit Log',
-                      subtitle: 'System activity log',
-                      onTap: () => context.go(AppRoutes.adminAuditLog),
-                    ),
-                    const SizedBox(height: 10),
-                    _SettingsTile(
-                      icon: Icons.storage_rounded,
-                      title: 'Data Management',
-                      subtitle: 'Backup & restore',
-                      badge: 'Expert',
                       onTap: () {},
                     ),
                   ],
@@ -600,7 +510,6 @@ class _SettingsTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final String? badge;
   final VoidCallback onTap;
 
   const _SettingsTile({
@@ -608,7 +517,6 @@ class _SettingsTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
-    this.badge,
   });
 
   @override
@@ -659,32 +567,11 @@ class _SettingsTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (badge != null) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: _purple.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  badge!,
-                  style: const TextStyle(
-                    color: _purple,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ] else
-              Icon(
-                Icons.arrow_forward_rounded,
-                color: _textSecondary,
-                size: 18,
-              ),
+            Icon(
+              Icons.arrow_forward_rounded,
+              color: _textSecondary,
+              size: 18,
+            ),
           ],
         ),
       ),

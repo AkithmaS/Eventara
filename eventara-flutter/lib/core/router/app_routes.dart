@@ -41,6 +41,9 @@ class AppRoutes {
   static const adminCategories = '/admin/categories';
   static const adminAnalytics = '/admin/analytics';
   static const adminAuditLog = '/admin/audit-log';
+  static const adminCustomerDetail = '/admin/users/customer-detail/:id';
+  static const adminOrganizerDetail = '/admin/users/organizer-detail/:id';
+  static const adminEventDetail = '/admin/events/event-detail/:id';
 
   // ── Helpers to build parameterised paths ─────────────────────────────────
   static String buildCustomerEventDetail(String id) => '/customer/event-detail/$id';
@@ -59,4 +62,9 @@ class AppRoutes {
   static String buildOrganizerEditEvent(String id) => '/organizer/edit-event/$id';
   static String buildOrganizerSeatMapEditor(String id) => '/organizer/seat-map-editor/$id';
   static String buildOrganizerPricingSetup(String id) => '/organizer/pricing-setup/$id';
+  static String buildAdminCustomerDetail(String id) => '/admin/users/customer-detail/$id';
+  static String buildAdminOrganizerDetail(String id) => '/admin/users/organizer-detail/$id';
+  static String buildAdminEventDetail(String id) => '/admin/events/event-detail/$id';
+  static String buildAdminEventsPending() => '/admin/events?tabIndex=pending';
+  static String buildAdminUsersPending() => '/admin/users?orgStatus=Pending';
 }

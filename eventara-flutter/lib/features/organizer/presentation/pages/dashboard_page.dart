@@ -127,9 +127,9 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: GridView.count(
                 crossAxisCount: 3,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 0.95,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.15,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
@@ -309,7 +309,7 @@ class _OrganizerDashboardPageState extends State<OrganizerDashboardPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 100),
+            const SizedBox(height: 80),
           ],
         ),
       ),
@@ -359,42 +359,49 @@ class _KPICardState extends State<_KPICard> {
                   : Colors.white.withValues(alpha: 0.08),
             ),
           ),
-          padding: const EdgeInsets.all(14),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
                   color: widget.color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
                   child: Icon(
                     widget.icon,
                     color: widget.color,
-                    size: 18,
+                    size: 14,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                widget.value,
-                style: const TextStyle(
-                  color: _textPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                widget.label,
-                style: const TextStyle(
-                  color: _textSecondary,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.value,
+                    style: const TextStyle(
+                      color: _textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    widget.label,
+                    style: const TextStyle(
+                      color: _textSecondary,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ],
           ),

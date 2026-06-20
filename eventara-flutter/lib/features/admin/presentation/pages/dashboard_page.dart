@@ -135,7 +135,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                   title: '3 Organizer Applications',
                   subtitle: 'Pending',
                   buttonLabel: 'Review',
-                  onTap: () {},
+                  onTap: () => context.go(AppRoutes.buildAdminUsersPending()),
                 ),
                 const SizedBox(height: 10),
                 _AlertBox(
@@ -143,7 +143,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                   title: '5 Events Awaiting Approval',
                   subtitle: 'Pending',
                   buttonLabel: 'Review',
-                  onTap: () {},
+                  onTap: () => context.go(AppRoutes.buildAdminEventsPending()),
                 ),
                 const SizedBox(height: 24),
 
@@ -217,27 +217,27 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
                     _QuickActionCard(
                       icon: Icons.people_rounded,
                       label: 'Manage Users',
-                      onTap: () => context.go(AppRoutes.adminUsers),
+                      onTap: () => context.push(AppRoutes.adminUsers),
                     ),
                     _QuickActionCard(
                       icon: Icons.event_rounded,
                       label: 'Review Events',
-                      onTap: () => context.go(AppRoutes.adminEvents),
+                      onTap: () => context.push(AppRoutes.adminEvents),
                     ),
                     _QuickActionCard(
                       icon: Icons.category_rounded,
                       label: 'Categories',
-                      onTap: () {},
+                      onTap: () => context.push(AppRoutes.adminCategories),
                     ),
                     _QuickActionCard(
                       icon: Icons.bar_chart_rounded,
                       label: 'Analytics',
-                      onTap: () {},
+                      onTap: () => context.push(AppRoutes.adminAnalytics),
                     ),
                     _QuickActionCard(
                       icon: Icons.history_rounded,
                       label: 'Audit Log',
-                      onTap: () => context.go(AppRoutes.adminAuditLog),
+                      onTap: () => context.push(AppRoutes.adminAuditLog),
                     ),
                   ],
                 ),

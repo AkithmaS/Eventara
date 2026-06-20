@@ -29,7 +29,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         backgroundColor: _bgDeep,
         elevation: 0,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => context.pop(),
           child: const Icon(Icons.arrow_back_rounded, color: _textPrimary),
         ),
         title: const Text(

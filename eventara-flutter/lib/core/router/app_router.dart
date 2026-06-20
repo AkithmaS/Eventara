@@ -33,6 +33,10 @@ import '../../features/admin/presentation/pages/analytics_page.dart' as admin_an
 import '../../features/admin/presentation/pages/audit_log_page.dart' as admin_audit_log;
 import '../../features/admin/presentation/pages/settings_page.dart' as admin_settings;
 import '../../features/admin/presentation/pages/user_management_page.dart' as admin_users;
+import '../../features/admin/presentation/pages/customer_detail_page.dart' as admin_customer_detail;
+import '../../features/admin/presentation/pages/organizer_detail_page.dart' as admin_organizer_detail;
+import '../../features/admin/presentation/pages/event_detail_page.dart' as admin_event_detail;
+import '../../features/admin/presentation/pages/event_approvals_page.dart' as admin_events;
 import '../../features/landing/landing_page.dart';
 import 'app_routes.dart';
 
@@ -280,13 +284,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             name: 'adminUsers',
             path: AppRoutes.adminUsers,
             redirect: (context, state) async => _adminGuard(state),
-            builder: (context, state) => const admin_users.UserManagementPage(),
+            builder: (context, state) {
+              final orgStatus = state.uri.queryParameters['orgStatus'];
+              return admin_users.UserManagementPage(initialOrganizerStatus: orgStatus);
+            },
           ),
           GoRoute(
             name: 'adminEvents',
             path: AppRoutes.adminEvents,
             redirect: (context, state) async => _adminGuard(state),
-            builder: (context, state) => const admin.AdminDashboardPage(),
+            builder: (context, state) {
+              final tabIndex = state.uri.queryParameters['tabIndex'];
+              return admin_events.EventApprovalsPage(initialTabIndex: tabIndex);
+            },
           ),
           GoRoute(
             name: 'adminSettings',
@@ -317,6 +327,33 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             path: AppRoutes.adminAuditLog,
             redirect: (context, state) async => _adminGuard(state),
             builder: (context, state) => const admin_audit_log.AuditLogPage(),
+          ),
+          GoRoute(
+            name: 'adminCustomerDetail',
+            path: AppRoutes.adminCustomerDetail,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return admin_customer_detail.CustomerDetailPage(customerId: id);
+            },
+          ),
+          GoRoute(
+            name: 'adminOrganizerDetail',
+            path: AppRoutes.adminOrganizerDetail,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return admin_organizer_detail.OrganizerDetailPage(organizerId: id);
+            },
+          ),
+          GoRoute(
+            name: 'adminEventDetail',
+            path: AppRoutes.adminEventDetail,
+            redirect: (context, state) async => _adminGuard(state),
+            builder: (context, state) {
+              final id = state.pathParameters['id'] ?? '';
+              return admin_event_detail.AdminEventDetailPage(eventId: id);
+            },
           ),
         ],
       ),

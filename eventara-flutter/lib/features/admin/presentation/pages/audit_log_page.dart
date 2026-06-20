@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 // ─── Color tokens ──────────────────────────────────────────────────────────
 const _bgDeep = Color(0xFF0D0B1E);
@@ -98,7 +99,7 @@ class _AuditLogPageState extends State<AuditLogPage> {
         backgroundColor: _bgDeep,
         elevation: 0,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => context.pop(),
           child: const Icon(Icons.arrow_back_rounded, color: _textPrimary),
         ),
         title: const Text(

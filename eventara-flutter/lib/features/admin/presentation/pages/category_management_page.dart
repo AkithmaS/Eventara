@@ -7,8 +7,6 @@ const _bgDeep = Color(0xFF0D0B1E);
 const _bgCard = Color(0xFF151228);
 const _purple = Color(0xFF7B5CF6);
 const _purpleLight = Color(0xFF9B8AFB);
-const _gradStart = Color(0xFF7B5CF6);
-const _gradEnd = Color(0xFFE07BB0);
 const _textPrimary = Color(0xFFFFFFFF);
 const _textSecondary = Color(0xFFB0A8D0);
 const _accentGreen = Color(0xFF4ECB71);
@@ -61,28 +59,17 @@ class _CategoryManagementPageState extends State<CategoryManagementPage> {
     ),
   ];
 
-  late List<_CategoryData> _displayedCategories;
   bool _showInactive = false;
 
   @override
   void initState() {
     super.initState();
-    _updateDisplay();
-  }
-
-  void _updateDisplay() {
-    setState(() {
-      _displayedCategories = _showInactive
-          ? _categories.where((c) => !c.isActive).toList()
-          : _categories.where((c) => c.isActive).toList();
-    });
   }
 
   void _toggleCategory(int index) {
     setState(() {
       final category = _categories[index];
       category.isActive = !category.isActive;
-      _updateDisplay();
     });
   }
 
@@ -97,7 +84,7 @@ class _CategoryManagementPageState extends State<CategoryManagementPage> {
         backgroundColor: _bgDeep,
         elevation: 0,
         leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
+          onTap: () => context.pop(),
           child: const Icon(Icons.arrow_back_rounded, color: _textPrimary),
         ),
         title: const Text(

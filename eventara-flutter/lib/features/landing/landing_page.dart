@@ -68,7 +68,7 @@ class _LandingPageState extends State<LandingPage>
             _FeaturesSection(),
             _ExploreByCategorySection(),
             _TestimonialsSection(),
-            _CtaBanner(),
+            const _CtaBanner(),
             _Footer(),
           ],
         ),
@@ -932,78 +932,96 @@ class _TestimonialCardState extends State<_TestimonialCard> {
 }
 
 // ─── 7. CTA BANNER ───────────────────────────────────────────────────────────
-class _CtaBanner extends StatelessWidget {
+class _CtaBanner extends StatefulWidget {
+  const _CtaBanner();
+
+  @override
+  State<_CtaBanner> createState() => _CtaBannerState();
+}
+
+class _CtaBannerState extends State<_CtaBanner> {
+  bool _hovered = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: _bgDeep,
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 48),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF7B4FCF),
-              Color(0xFF9B5CF6),
-              Color(0xFFBB6EC2),
-              Color(0xFFD4848A),
-              Color(0xFFE8A87C),
-            ],
-            stops: [0.0, 0.25, 0.5, 0.75, 1.0],
-          ),
-        ),
-        child: Column(
-          children: [
-            const Text(
-              'Ready to\nHost?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: _textPrimary,
-                fontSize: 36,
-                fontWeight: FontWeight.w800,
-                height: 1.2,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: AnimatedScale(
+          scale: _hovered ? 1.03 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF7B4FCF),
+                  Color(0xFF9B5CF6),
+                  Color(0xFFBB6EC2),
+                  Color(0xFFD4848A),
+                  Color(0xFFE8A87C),
+                ],
+                stops: [0.0, 0.25, 0.5, 0.75, 1.0],
               ),
             ),
-            const SizedBox(height: 14),
-            const Text(
-              'Join the most advanced event ecosystem in the world. Start selling tickets in minutes.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFFEEE0FF),
-                fontSize: 14,
-                height: 1.6,
-              ),
-            ),
-            const SizedBox(height: 28),
-            SizedBox(
-              width: double.infinity,
-              child: _AnimatedButtonWrapper(
-                onTap: () => context.go(AppRoutes.organizerCreateEvent),
-                child: TextButton(
-                  onPressed: () => context.go(AppRoutes.organizerCreateEvent),
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color(0xFF0D0B1E),
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
+            child: Column(
+              children: [
+                const Text(
+                  'Ready to\nHost?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _textPrimary,
+                    fontSize: 36,
+                    fontWeight: FontWeight.w800,
+                    height: 1.2,
                   ),
-                  child: const Text(
-                    'Launch Your Event',
-                    style: TextStyle(
-                      color: _textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
+                ),
+                const SizedBox(height: 14),
+                const Text(
+                  'Join the most advanced event ecosystem in the world. Start selling tickets in minutes.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Color(0xFFEEE0FF),
+                    fontSize: 14,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  child: _AnimatedButtonWrapper(
+                    onTap: () => context.go(AppRoutes.organizerCreateEvent),
+                    child: TextButton(
+                      onPressed: () => context.go(AppRoutes.organizerCreateEvent),
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color(0xFF0D0B1E),
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                      child: const Text(
+                        'Launch Your Event',
+                        style: TextStyle(
+                          color: _textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
