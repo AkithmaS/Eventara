@@ -3,6 +3,11 @@
 .env.*
 !.env.example                        # Keep the example template committed
 
+# Spring Boot local overrides (contain real credentials, never commit)
+application-local.yaml
+application-local.yml
+application-local.properties
+
 # ── Spring Boot / Maven ───────────────────────────────────────────────────────
 target/
 !.mvn/wrapper/maven-wrapper.jar
