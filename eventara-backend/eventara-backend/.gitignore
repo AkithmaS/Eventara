@@ -33,6 +33,9 @@ build/
 .vscode/
 
 ### Secrets — never commit local credential overrides ###
+.env
+.env.*
+!.env.example
 src/main/resources/application-local.yaml
 src/main/resources/application-local.yml
 src/main/resources/application-local.properties

@@ -29,5 +29,5 @@ server:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:ZXZlbnRhcmFfc2VjcmV0X2tleV9tYWtlX3RoaXNfdmVyeV9sb25nX21pbl8zMl9jaGFycw==}
+    secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION:86400000}

@@ -41,19 +41,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             userEmail = jwtUtil.extractUsername(jwt);
         } catch (Exception e) {
-            System.out.println(">>> TOKEN PARSE ERROR: " + e.getMessage());
             filterChain.doFilter(request, response);
             return;
         }
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-
-            System.out.println(">>> EMAIL: " + userEmail);
-            System.out.println(">>> AUTHORITIES: " + userDetails.getAuthorities());
-            System.out.println(">>> IS ENABLED: " + userDetails.isEnabled());
-            System.out.println(">>> IS ACCOUNT NON LOCKED: " + userDetails.isAccountNonLocked());
-            System.out.println(">>> TOKEN VALID: " + jwtUtil.isTokenValid(jwt, userDetails));
 
             if (jwtUtil.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
@@ -64,9 +57,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println(">>> AUTH SET SUCCESSFULLY for: " + userEmail);
-            } else {
-                System.out.println(">>> TOKEN INVALID — auth not set");
             }
         }
 
