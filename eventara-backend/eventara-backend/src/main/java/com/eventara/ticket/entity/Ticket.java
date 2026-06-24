@@ -1,5 +1,7 @@
 package com.eventara.ticket.entity;
 
+import com.eventara.booking.entity.Booking;
+import com.eventara.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,16 +20,18 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false, unique = true)
+    private Booking booking;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private User customer;
+
     @Column(nullable = false, unique = true)
     private String ticketCode;
 
-    @Column(nullable = false)
-    private Long bookingId;
-
-    @Column(nullable = false)
-    private Long customerId;
-
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String qrCodeData;
 
     @Enumerated(EnumType.STRING)
@@ -36,12 +40,10 @@ public class Ticket {
     private TicketStatus status = TicketStatus.VALID;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime issuedAt;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    public enum TicketStatus {
-        VALID, USED, CANCELLED, EXPIRED
-    }
 }

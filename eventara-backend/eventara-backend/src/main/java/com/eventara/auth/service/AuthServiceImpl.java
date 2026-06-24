@@ -85,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         Organizer organizer = Organizer.builder()
-                .userId(user.getId())
+                .user(user)
                 .organizationName(request.getOrganizationName())
                 .organizationType(request.getOrganizationType())
                 .description(request.getDescription())
@@ -114,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Organizers must be APPROVED before they can log in
         if (user.getRole() == Role.ROLE_ORGANIZER) {
-            organizerRepository.findByUserId(user.getId())
+            organizerRepository.findByUser_Id(user.getId())
                     .filter(o -> o.getStatus() == OrganizerStatus.APPROVED)
                     .orElseThrow(() -> new UnauthorizedException(
                             "Organizer account is pending approval or has been rejected"));

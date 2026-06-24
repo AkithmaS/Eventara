@@ -3,6 +3,7 @@ package com.eventara.common.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,14 +35,13 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers(
-                    "POST", "/api/auth/register",
-                    "/api/auth/login",
-                    "/api/auth/organizer/apply"
-                ).permitAll()
-                .requestMatchers("GET", "/api/events").permitAll()
-                .requestMatchers("GET", "/api/events/**").permitAll()
+                // Public auth endpoints
+                .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/organizer/apply").permitAll()
+                // Public event browsing
+                .requestMatchers(HttpMethod.GET, "/api/events", "/api/events/**").permitAll()
                 // Role-protected endpoints
                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                 .requestMatchers("/api/organizer/**").hasRole("ORGANIZER")
@@ -57,8 +57,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }

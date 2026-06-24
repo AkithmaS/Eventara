@@ -1,6 +1,7 @@
 package com.eventara.organizer.entity;
 
 import com.eventara.common.enums.OrganizerStatus;
+import com.eventara.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,8 +21,9 @@ public class Organizer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
 
     @Column(nullable = false)
     private String organizationName;
@@ -44,14 +46,17 @@ public class Organizer {
     private String rejectionReason;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime appliedAt;
 
     @Column
     private LocalDateTime reviewedAt;
 
     @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(nullable = false)
     private LocalDateTime updatedAt;
 }
