@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:eventara/core/router/app_routes.dart';
 
 // ─── Colour tokens ──────────────────────────────────────────────────────────
 const _bgDeep = Color(0xFF0D0B1E);
@@ -24,6 +26,7 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
 
   final List<_TicketData> _upcomingTickets = [
     _TicketData(
+      id: '1',
       eventName: 'Neon Pulse Festival',
       date: 'Aug 24, 2026 • 10:00 PM',
       venue: 'Neon Gardens, Los Angeles',
@@ -31,8 +34,11 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
       bookingRef: '#BK-2026-N7X9',
       image: 'assets/images/neon.jpg',
       status: 'upcoming',
+      holderName: 'John Doe',
+      totalPrice: '150.00',
     ),
     _TicketData(
+      id: '2',
       eventName: 'Midnight Jazz Lounge',
       date: 'Sep 12, 2026 • 21:30',
       venue: 'The Blue Note, NYC',
@@ -40,11 +46,14 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
       bookingRef: '#BK-2026-JPW2',
       image: 'assets/images/jazz.jpg',
       status: 'upcoming',
+      holderName: 'Jane Smith',
+      totalPrice: '250.00',
     ),
   ];
 
   final List<_TicketData> _pastTickets = [
     _TicketData(
+      id: '3',
       eventName: 'Summer Music Festival',
       date: 'Jul 15, 2026 • 18:00',
       venue: 'Central Park, NY',
@@ -52,11 +61,14 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
       bookingRef: '#BK-2026-SUM1',
       image: 'assets/images/festival.jpg',
       status: 'past',
+      holderName: 'Alex Johnson',
+      totalPrice: '75.00',
     ),
   ];
 
   final List<_TicketData> _cancelledTickets = [
     _TicketData(
+      id: '4',
       eventName: 'Global Tech Summit',
       date: 'Oct 06, 2026 • 09:00',
       venue: 'Convention Center, SF',
@@ -64,6 +76,8 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
       bookingRef: '#BK-2026-T481',
       image: 'assets/images/tech.jpg',
       status: 'cancelled',
+      holderName: 'Chris Lee',
+      totalPrice: '200.00',
     ),
   ];
 
@@ -202,12 +216,14 @@ class _TicketDisplayPageState extends State<TicketDisplayPage>
           ],
         ),
       ),
+      bottomNavigationBar: _BottomNavBar(),
     );
   }
 }
 
 /// Ticket data model
 class _TicketData {
+  final String id;
   final String eventName;
   final String date;
   final String venue;
@@ -215,8 +231,11 @@ class _TicketData {
   final String bookingRef;
   final String image;
   final String status;
+  final String holderName;
+  final String totalPrice;
 
   _TicketData({
+    required this.id,
     required this.eventName,
     required this.date,
     required this.venue,
@@ -224,6 +243,8 @@ class _TicketData {
     required this.bookingRef,
     required this.image,
     required this.status,
+    required this.holderName,
+    required this.totalPrice,
   });
 }
 
@@ -418,24 +439,45 @@ class _TicketCardState extends State<_TicketCard> {
                     // Action Button
                     SizedBox(
                       width: double.infinity,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: _purpleLight.withValues(alpha: 0.4),
+                      child: GestureDetector(
+                        onTap: () {
+                          // Extract date from format "Aug 24, 2026 • 10:00 PM" → "Aug 24, 2026"
+                          final eventDate = widget.ticket.date.split(' • ')[0];
+                          final seatsCount = widget.ticket.seatInfo.contains('General')
+                              ? '1'
+                              : widget.ticket.seatInfo.split(' ').last; // Extract seat count
+                          
+                          context.go(
+                            AppRoutes.buildCustomerBookingConfirmation(
+                              widget.ticket.bookingRef.replaceAll('#BK-2026-', ''),
+                              eventName: widget.ticket.eventName,
+                              eventDate: eventDate,
+                              venue: widget.ticket.venue,
+                              holderName: widget.ticket.holderName,
+                              seatsCount: seatsCount,
+                              totalPrice: widget.ticket.totalPrice,
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: _purpleLight.withValues(alpha: 0.4),
+                            ),
                           ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            widget.ticket.status == 'cancelled'
-                                ? 'Details'
-                                : 'View Ticket',
-                            style: const TextStyle(
-                              color: _purpleLight,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.3,
+                          child: Center(
+                            child: Text(
+                              widget.ticket.status == 'cancelled'
+                                  ? 'Details'
+                                  : 'View Ticket',
+                              style: const TextStyle(
+                                color: _purpleLight,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.3,
+                              ),
                             ),
                           ),
                         ),
@@ -445,6 +487,93 @@ class _TicketCardState extends State<_TicketCard> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom Navigation Bar
+class _BottomNavBar extends StatefulWidget {
+  const _BottomNavBar();
+
+  @override
+  State<_BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<_BottomNavBar> {
+  int _selectedIndex = 2; // My Tickets is index 2
+
+  final List<Map<String, dynamic>> _navItems = [
+    {'icon': Icons.home_rounded, 'label': 'Home'},
+    {'icon': Icons.search_rounded, 'label': 'Explore'},
+    {'icon': Icons.bookmark_rounded, 'label': 'My Tickets'},
+    {'icon': Icons.person_rounded, 'label': 'Profile'},
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _bgCard,
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(_navItems.length, (index) {
+              final item = _navItems[index];
+              final isSelected = _selectedIndex == index;
+              return MouseRegion(
+                onEnter: (_) {},
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() => _selectedIndex = index);
+                    switch (index) {
+                      case 0:
+                        context.go(AppRoutes.customerHome);
+                        break;
+                      case 1:
+                        context.go(AppRoutes.customerAllEvents);
+                        break;
+                      case 2:
+                        context.go(AppRoutes.customerMyTickets);
+                        break;
+                      case 3:
+                        context.go(AppRoutes.customerProfile);
+                        break;
+                    }
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        item['icon'],
+                        color: isSelected ? _purpleLight : _textSecondary,
+                        size: 24,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        item['label'],
+                        style: TextStyle(
+                          color: isSelected ? _purpleLight : _textSecondary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
           ),
         ),
       ),

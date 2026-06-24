@@ -2,6 +2,18 @@
 .env
 .env.*
 !.env.example                        # Keep the example template committed
+secrets.json
+.secrets/
+.local/
+config/secrets/
+firebase.json
+.flutterfire
+
+# ── API Keys & Tokens ─────────────────────────────────────────────────────────
+api_keys.dart
+constants/secrets.dart
+lib/config/secrets.dart
+lib/secrets.dart
 
 # ── Keys, Certificates & Credentials ─────────────────────────────────────────
 *.jks

@@ -219,7 +219,7 @@ class _MyEventsPageState extends State<MyEventsPage> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 14,
                         crossAxisSpacing: 14,
-                        childAspectRatio: 0.75,
+                        childAspectRatio: 0.65,
                       ),
                       itemCount: _filteredEvents.length,
                       itemBuilder: (context, index) {
@@ -230,9 +230,11 @@ class _MyEventsPageState extends State<MyEventsPage> {
                       },
                     ),
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
+      bottomNavigationBar: _OrganizerBottomNav(selectedIndex: 1),
     );
   }
 }
@@ -285,7 +287,9 @@ class _EventCardState extends State<_EventCard> {
         curve: Curves.easeOut,
         child: GestureDetector(
           onTap: () {
-            // Open event details/editor
+            context.go(
+              AppRoutes.buildOrganizerEditEvent(widget.event.id),
+            );
           },
           child: Container(
             decoration: BoxDecoration(
@@ -307,7 +311,7 @@ class _EventCardState extends State<_EventCard> {
                     topRight: Radius.circular(14),
                   ),
                   child: Container(
-                    height: 120,
+                    height: 100,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -360,121 +364,115 @@ class _EventCardState extends State<_EventCard> {
                 ),
 
                 // Event Details
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Title
-                        Text(
-                          widget.event.title,
-                          style: const TextStyle(
-                            color: _textPrimary,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            height: 1.2,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title
+                      Text(
+                        widget.event.title,
+                        style: const TextStyle(
+                          color: _textPrimary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          height: 1.2,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
 
-                        // Date & Venue
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today_rounded,
-                                  color: _textSecondary.withValues(alpha: 0.6),
-                                  size: 10,
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    widget.event.date,
-                                    style: TextStyle(
-                                      color: _textSecondary.withValues(alpha: 0.7),
-                                      fontSize: 10,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 3),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on_rounded,
-                                  color: _textSecondary.withValues(alpha: 0.6),
-                                  size: 10,
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    widget.event.venue,
-                                    style: TextStyle(
-                                      color: _textSecondary.withValues(alpha: 0.7),
-                                      fontSize: 10,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        // Tickets & Revenue
-                        if (widget.event.tickets > 0)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      // Date & Venue
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${widget.event.tickets} tickets',
-                                    style: TextStyle(
-                                      color: _textSecondary.withValues(alpha: 0.6),
-                                      fontSize: 10,
-                                    ),
+                              Icon(
+                                Icons.calendar_today_rounded,
+                                color: _textSecondary.withValues(alpha: 0.6),
+                                size: 9,
+                              ),
+                              const SizedBox(width: 3),
+                              Expanded(
+                                child: Text(
+                                  widget.event.date,
+                                  style: TextStyle(
+                                    color: _textSecondary.withValues(alpha: 0.7),
+                                    fontSize: 9,
                                   ),
-                                  Text(
-                                    widget.event.revenue,
-                                    style: const TextStyle(
-                                      color: _accentGreen,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
-                          )
-                        else
-                          Center(
-                            child: Text(
-                              'No bookings yet',
+                          ),
+                          const SizedBox(height: 2),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.location_on_rounded,
+                                color: _textSecondary.withValues(alpha: 0.6),
+                                size: 9,
+                              ),
+                              const SizedBox(width: 3),
+                              Expanded(
+                                child: Text(
+                                  widget.event.venue,
+                                  style: TextStyle(
+                                    color: _textSecondary.withValues(alpha: 0.7),
+                                    fontSize: 9,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+
+                      // Tickets & Revenue
+                      if (widget.event.tickets > 0)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${widget.event.tickets} tickets',
                               style: TextStyle(
-                                color: _textSecondary.withValues(alpha: 0.5),
-                                fontSize: 10,
+                                color: _textSecondary.withValues(alpha: 0.6),
+                                fontSize: 9,
                               ),
                             ),
+                            Text(
+                              widget.event.revenue,
+                              style: const TextStyle(
+                                color: _accentGreen,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        Center(
+                          child: Text(
+                            'No bookings yet',
+                            style: TextStyle(
+                              color: _textSecondary.withValues(alpha: 0.5),
+                              fontSize: 9,
+                            ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
 
                 // Action buttons
                 Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                   child: Row(
                     children: [
                       Expanded(
@@ -567,6 +565,84 @@ class _ActionButtonState extends State<_ActionButton> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Bottom Navigation Bar ────────────────────────────────────────────────────
+class _OrganizerBottomNav extends StatelessWidget {
+  final int selectedIndex;
+
+  const _OrganizerBottomNav({required this.selectedIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> navItems = [
+      {'icon': Icons.dashboard_rounded, 'label': 'Dashboard'},
+      {'icon': Icons.event_rounded, 'label': 'My Events'},
+      {'icon': Icons.assignment_rounded, 'label': 'Bookings'},
+      {'icon': Icons.person_rounded, 'label': 'Profile'},
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: _bgCard,
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(navItems.length, (index) {
+              final item = navItems[index];
+              final isSelected = selectedIndex == index;
+              return GestureDetector(
+                onTap: () {
+                  switch (index) {
+                    case 0:
+                      context.go(AppRoutes.organizerDashboard);
+                      break;
+                    case 1:
+                      context.go(AppRoutes.organizerMyEvents);
+                      break;
+                    case 2:
+                      context.go(AppRoutes.organizerBookings);
+                      break;
+                    case 3:
+                      context.go(AppRoutes.organizerProfile);
+                      break;
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item['icon'],
+                      color: isSelected ? _purpleLight : _textSecondary,
+                      size: 24,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['label'],
+                      style: TextStyle(
+                        color: isSelected ? _purpleLight : _textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
         ),
       ),

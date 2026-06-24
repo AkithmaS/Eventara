@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:eventara/core/router/app_routes.dart';
 
 // ─── Color tokens ──────────────────────────────────────────────────────────
 const _bgDeep = Color(0xFF0D0B1E);
@@ -331,6 +333,7 @@ class _EventBookingsListPageState extends State<EventBookingsListPage> {
           ],
         ),
       ),
+      bottomNavigationBar: _OrganizerBottomNav(selectedIndex: 2),
     );
   }
 }
@@ -650,6 +653,84 @@ class _BookingCardState extends State<_BookingCard> {
                 ],
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Bottom Navigation Bar ────────────────────────────────────────────────────
+class _OrganizerBottomNav extends StatelessWidget {
+  final int selectedIndex;
+
+  const _OrganizerBottomNav({required this.selectedIndex});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> navItems = [
+      {'icon': Icons.dashboard_rounded, 'label': 'Dashboard'},
+      {'icon': Icons.event_rounded, 'label': 'My Events'},
+      {'icon': Icons.assignment_rounded, 'label': 'Bookings'},
+      {'icon': Icons.person_rounded, 'label': 'Profile'},
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: _bgCard,
+        border: Border(
+          top: BorderSide(
+            color: Colors.white.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          height: 70,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(navItems.length, (index) {
+              final item = navItems[index];
+              final isSelected = selectedIndex == index;
+              return GestureDetector(
+                onTap: () {
+                  switch (index) {
+                    case 0:
+                      context.go(AppRoutes.organizerDashboard);
+                      break;
+                    case 1:
+                      context.go(AppRoutes.organizerMyEvents);
+                      break;
+                    case 2:
+                      context.go(AppRoutes.organizerBookings);
+                      break;
+                    case 3:
+                      context.go(AppRoutes.organizerProfile);
+                      break;
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item['icon'],
+                      color: isSelected ? _purpleLight : _textSecondary,
+                      size: 24,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      item['label'],
+                      style: TextStyle(
+                        color: isSelected ? _purpleLight : _textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
         ),
       ),
